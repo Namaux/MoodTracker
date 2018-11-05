@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/historyCase1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        >
+
+        <TextView
+            android:id="@+id/historyCase1Text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:textColor="@color/Black"
+            android:textSize="12sp"
+            android:text="Il y a une semaine"
+             />
+
+        <ImageButton
+            android:id="@+id/historyCase1Btn"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="right"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="20dp"
+            android:background="@color/banana_yellow" />
+
+    </LinearLayout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_weight="1"
+        android:id="@+id/historyCase2"
+        >
+
+        <TextView
+            android:id="@+id/historyCase2Text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:text="Il y a six jours"
+            android:textColor="@color/Black"
+            android:layout_marginLeft="5dp"
+            />
+
+        <ImageButton
+            android:id="@+id/historyCase2Btn"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@color/banana_yellow"
+            android:layout_gravity="right"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="20dp"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_weight="1"
+        android:id="@+id/historyCase3"
+        >
+
+        <TextView
+            android:id="@+id/historyCase3Text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:text="Il y a cinq jours"
+            android:textColor="@color/Black"
+            android:layout_marginLeft="5dp"
+            />
+
+        <ImageButton
+            android:id="@+id/historyCase3Btn"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@color/banana_yellow"
+            android:layout_gravity="right"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="20dp"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_weight="1"
+        android:id="@+id/historyCase4"
+        >
+
+        <TextView
+            android:id="@+id/historyCase4Text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:text="Il y a quatre jours"
+            android:textColor="@color/Black"
+            android:layout_marginLeft="5dp"
+            />
+
+        <ImageButton
+            android:id="@+id/historyCase4Btn"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@color/banana_yellow"
+            android:layout_gravity="right"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="20dp"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_weight="1"
+        android:id="@+id/historyCase5"
+        >
+
+        <TextView
+            android:id="@+id/historyCase5Text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:text="Il y a trois jours"
+            android:textColor="@color/Black"
+            android:layout_marginLeft="5dp"
+            />
+
+        <ImageButton
+            android:id="@+id/historyCase5Btn"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@color/banana_yellow"
+            android:layout_gravity="right"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="20dp"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_weight="1"
+        android:id="@+id/historyCase6"
+        >
+
+        <TextView
+            android:id="@+id/historyCase6Text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:text="Avant-hier"
+            android:textColor="@color/Black"
+            android:layout_marginLeft="5dp"
+            />
+
+        <ImageButton
+            android:id="@+id/historyCase6Btn"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@color/banana_yellow"
+            android:layout_gravity="right"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="20dp"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_weight="1"
+        android:id="@+id/historyCase7"
+        >
+
+        <TextView
+            android:id="@+id/historyCase7Text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:text="Hier"
+            android:textColor="@color/Black"
+            android:layout_marginLeft="5dp"
+            />
+
+        <ImageButton
+            android:id="@+id/historyCase7Btn"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@color/banana_yellow"
+            android:layout_gravity="right"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="20dp"
+            />
+
+    </LinearLayout>
+    
+</LinearLayout>

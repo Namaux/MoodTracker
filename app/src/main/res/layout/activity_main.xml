@@ -5,6 +5,38 @@
     android:background="@color/light_sage"
     android:id="@+id/moodTrackerLayout">
 
+    <RelativeLayout
+        android:layout_width="159dp"
+        android:layout_height="69dp"
+        android:background="@drawable/color_shadow_white">
+
+        <TextView
+            android:id="@+id/currentMsg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_centerInParent="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="20dp"
+            android:text="DAY MOOD :"
+            android:textColor="@color/Black"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/currentSmiley"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_centerInParent="true"
+            android:layout_marginLeft="100dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/White"
+            android:src="@drawable/smiley_happy" />
+
+    </RelativeLayout>
+
     <ImageButton
         android:id="@+id/smiley"
         android:layout_width="wrap_content"
