@@ -1,12 +1,18 @@
 package com.richard.lucas.moodtracker.controller;
 
 import android.annotation.SuppressLint;
+import android.app.AlarmManager;
 import android.app.Dialog;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.RequiresApi;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -18,6 +24,7 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import android.widget.Button;
@@ -26,6 +33,7 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.richard.lucas.moodtracker.R;
+import com.richard.lucas.moodtracker.model.AlarmReceiver;
 import com.richard.lucas.moodtracker.model.Mood;
 
 import java.security.AccessController;
@@ -52,31 +60,35 @@ public class MainActivity extends AppCompatActivity{
     private ImageView mImgCurrentMood;
 
     private int currentMood = 1; // 0:superHappy 1:happy 2:normal 3:disappointed 4:sad
+    private String saveDate;
 
     private Mood mMood;
+    private AlarmReceiver mAlarm;
 
     private Map<Integer, Integer> mListMoodValue = new HashMap<>();
     private Map<Integer, String> mListMoodComment = new HashMap<>();
 
     private SharedPreferences mPreferences;
 
-    private String saveDate;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        System.out.println("MainActivity::onCreate");
         setContentView(R.layout.activity_main);
 
-        Date date = new Date();
-        SimpleDateFormat DATE = new SimpleDateFormat("MM dd");
-        SimpleDateFormat HOUR = new SimpleDateFormat("HH");
-        final String Date = DATE.format(date);
-        String Hour = HOUR.format(date);
+        final MediaPlayer supperHappySoundMP = MediaPlayer.create(this, R.raw.super_happy);
+        final MediaPlayer happySoundMP = MediaPlayer.create(this, R.raw.happy);
+        final MediaPlayer normalSoundMP = MediaPlayer.create(this, R.raw.normal);
+        final MediaPlayer disapointedSoundMP = MediaPlayer.create(this, R.raw.disappointed);
+        final MediaPlayer sadSoundMP = MediaPlayer.create(this, R.raw.sad);
 
         mMood = new Mood();
+        mAlarm = new AlarmReceiver();
 
-        mPreferences = getPreferences(MODE_PRIVATE);
+        mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         mImgButton = (ImageButton) findViewById(R.id.smiley);
         mAddNoteButton = (ImageButton) findViewById(R.id.addNote);
@@ -93,28 +105,46 @@ public class MainActivity extends AppCompatActivity{
         // The touch listener passes all its events on to the gesture detector
         myView.setOnTouchListener(touchListener);
 
-        mMood.setCurrentMood(mPreferences.getInt("currentMood", 5));
-        mMood.setComment(mPreferences.getString("currentMoodComment", ""));
+        mMood.setCurrentMood(mPreferences.getInt("currentMood", 1));
+        mMood.setComment(mPreferences.getString("currentMoodComment", "null"));
 
         changeCurrentSmiley(mPreferences.getInt("currentMood",1));
 
         mImgButton.setOnClickListener(new View.OnClickListener() {
-            @SuppressLint("ResourceType")
             @Override
             public void onClick(View v) {
+                startAlert();
                 mMood.setCurrentMood(currentMood);
                 mPreferences.edit().putInt("currentMood",mMood.getCurrentMood()).apply();
 
-                mMood.setComment(mPreferences.getString("currentMoodComment", ""));
+                mMood.setComment(mPreferences.getString("currentMoodComment", "null"));
 
-                if (mMood.getComment().compareTo("") == 0){
-                    mMood.setComment("");
+                if (mMood.getComment().compareTo("null") == 0){
+                    mMood.setComment("null");
                     mPreferences.edit().putString("currentMoodComment",mMood.getComment()).apply();
                 }
 
-                saveDate = Date;
-                mPreferences.edit().putString("saveDate",saveDate).apply();
                 changeCurrentSmiley(mPreferences.getInt("currentMood",1));
+
+                switch (currentMood){
+                    case 0 :
+                        supperHappySoundMP.start();
+                        break;
+                    case 1 :
+                        happySoundMP.start();
+                        break;
+                    case 2 :
+                        normalSoundMP.start();
+                        break;
+                    case 3 :
+                        disapointedSoundMP.start();
+                        break;
+                    case 4 :
+                        sadSoundMP.start();
+                        break;
+
+                }
+                mPreferences.edit().putBoolean("newMood", true).apply();
             }
         });
 
@@ -124,8 +154,6 @@ public class MainActivity extends AppCompatActivity{
 
                 new AlertDialog.Builder(v.getContext())
                         .setView(R.layout.comment)
-
-
 
                         .setPositiveButton("Valider", new DialogInterface.OnClickListener() {
                             @Override
@@ -219,7 +247,6 @@ public class MainActivity extends AppCompatActivity{
             return false;
         }
     }
-    @SuppressLint({"CutPasteId", "WrongViewCast"})
     public void changeSlide(int slide){
         View myView = findViewById(R.id.moodTrackerLayout);
 
@@ -286,13 +313,13 @@ public class MainActivity extends AppCompatActivity{
         mListMoodValue.put(6, mPreferences.getInt("moodValue6", 5));
         mListMoodValue.put(7, mPreferences.getInt("moodValue7", 5));
 
-        mListMoodComment.put(1, mPreferences.getString("moodComment1", ""));
-        mListMoodComment.put(2, mPreferences.getString("moodComment2", ""));
-        mListMoodComment.put(3, mPreferences.getString("moodComment3", ""));
-        mListMoodComment.put(4, mPreferences.getString("moodComment4", ""));
-        mListMoodComment.put(5, mPreferences.getString("moodComment5", ""));
-        mListMoodComment.put(6, mPreferences.getString("moodComment6", ""));
-        mListMoodComment.put(7, mPreferences.getString("moodComment7", ""));
+        mListMoodComment.put(1, mPreferences.getString("moodComment1", "null"));
+        mListMoodComment.put(2, mPreferences.getString("moodComment2", "null"));
+        mListMoodComment.put(3, mPreferences.getString("moodComment3", "null"));
+        mListMoodComment.put(4, mPreferences.getString("moodComment4", "null"));
+        mListMoodComment.put(5, mPreferences.getString("moodComment5", "null"));
+        mListMoodComment.put(6, mPreferences.getString("moodComment6", "null"));
+        mListMoodComment.put(7, mPreferences.getString("moodComment7", "null"));
 
     }
 
@@ -314,35 +341,54 @@ public class MainActivity extends AppCompatActivity{
         mPreferences.edit().putString("moodComment7", mListMoodComment.get(7)).apply();
     }
 
-    public void saveMoodAtMidnight(){
-        Date date = new Date();
-        SimpleDateFormat DATE = new SimpleDateFormat("MM dd");
-        final String Date = DATE.format(date);
+    //public static Context getContextOfApplication(){
+        //return contextOfApplication;
+   // }
 
-        if (Date.compareTo(mPreferences.getString("saveDate","")) != 0){
+    public void saveMoodAtMidnight(){
             createListMood();
             mMood.addMoodValue(mListMoodValue);
             mMood.addMoodComment(mListMoodComment);
             addPreferences();
 
-            mPreferences.edit().putString("currentMoodComment", "").apply();
+            mPreferences.edit().putString("currentMoodComment", "null").apply();
             mPreferences.edit().putInt("currentMood", 1).apply();
-            changeCurrentSmiley(mPreferences.getInt("currentMood",1));
+            mPreferences.edit().putBoolean("newMood", false).apply();
+            currentMood =1;
+            mMood.setCurrentMood(1);
+            changeSlide(1);
+            changeCurrentSmiley(1);
 
-        }
+    }
+
+
+    public void startAlert(){
+        Date date = new Date();
+        SimpleDateFormat HOUR = new SimpleDateFormat("HH");
+        SimpleDateFormat MIN = new SimpleDateFormat("mm");
+        String Hour = HOUR.format(date);
+        String Min = MIN.format(date);
+
+        int hour = Integer.parseInt(Hour);
+        int min = Integer.parseInt(Min);
+
+        int millisBeforeMidnight = ((23 - hour) * 3600000) + ((60 - min) * 60000);
+        System.out.println(millisBeforeMidnight);
+
+        Intent alarmIntent = new Intent(MainActivity.this, AlarmReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 234324243, alarmIntent, 0);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + (millisBeforeMidnight), pendingIntent);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        Date date = new Date();
-        SimpleDateFormat DATE = new SimpleDateFormat("MM dd");
-        final String Date = DATE.format(date);
-
         System.out.println("MainActivity::onStart()");
-        if (Date.compareTo(mPreferences.getString("saveDate","")) != 0){
-            saveMoodAtMidnight();
-            mPreferences.edit().putString("saveDate", Date).apply();
+
+        if (mPreferences.getBoolean("midnight", false) == true){
+            if (mPreferences.getBoolean("newMood", false) == true){saveMoodAtMidnight();}
+            mPreferences.edit().putBoolean("midnight", false).apply();
         }
     }
 

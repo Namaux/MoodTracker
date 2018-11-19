@@ -170,7 +170,7 @@ public class HistoryActivity extends AppCompatActivity {
 
         boolean comment = false;
 
-        if(moodComment.compareTo("") != 0){comment = true;}
+        if(moodComment.compareTo("null") != 0){comment = true;}
 
         switch (moodValue){
             case 0:

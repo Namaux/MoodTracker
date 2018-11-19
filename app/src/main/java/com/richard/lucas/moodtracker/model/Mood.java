@@ -26,16 +26,18 @@ public class Mood {
     }
 
     public void addMoodValue(Map<Integer, Integer> mListMoodValue){
-        for (int i = 1; i < 7; i++){
-            mListMoodValue.put(i, mListMoodValue.get(i + 1));
-        }mListMoodValue.put(7, currentMood);
+            for (int i = 1; i < 7; i++) {
+                mListMoodValue.put(i, mListMoodValue.get(i + 1));
+            }
+            mListMoodValue.put(7, currentMood);
+
     }
 
     public void addMoodComment(Map<Integer, String> mListMoodComment) {
+            for (int i = 1; i < 7; i++) {
+                mListMoodComment.put(i, mListMoodComment.get(i + 1));
+            }
+            mListMoodComment.put(7, comment);
 
-        for (int i = 1; i < 7; i++) {
-            mListMoodComment.put(i, mListMoodComment.get(i + 1));
-        }
-        mListMoodComment.put(7, comment);
     }
 }
