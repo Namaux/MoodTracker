@@ -44,23 +44,18 @@ public class MainActivity extends AppCompatActivity{
     private int currentMood = 1; // 0:superHappy 1:happy 2:normal 3:disappointed 4:sad
 
     private Mood mMood;
-    private AlarmReceiver mAlarm;
 
     private Map<Integer, Integer> mListMoodValue = new HashMap<>();
     private Map<Integer, String> mListMoodComment = new HashMap<>();
-
-    private SharedPreferences mPreferences;
-
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         System.out.println("MainActivity::onCreate");
         setContentView(R.layout.activity_main);
-
         SharedPref.init(getApplicationContext());
+        View myView = findViewById(R.id.moodTrackerLayout);
+        myView.setOnTouchListener(touchListener);
 
         final MediaPlayer supperHappySoundMP = MediaPlayer.create(this, R.raw.super_happy);
         final MediaPlayer happySoundMP = MediaPlayer.create(this, R.raw.happy);
@@ -68,47 +63,27 @@ public class MainActivity extends AppCompatActivity{
         final MediaPlayer disapointedSoundMP = MediaPlayer.create(this, R.raw.disappointed);
         final MediaPlayer sadSoundMP = MediaPlayer.create(this, R.raw.sad);
 
-        mMood = new Mood();
-        mAlarm = new AlarmReceiver();
-
-        mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-
         mImgButton = (ImageButton) findViewById(R.id.smiley);
         mAddNoteButton = (ImageButton) findViewById(R.id.addNote);
         mHistoryButton = (ImageButton) findViewById(R.id.history);
         mCommentInput = (EditText) findViewById(R.id.boxComment);
         mImgCurrentMood = (ImageView) findViewById(R.id.currentSmiley);
 
-        View myView = findViewById(R.id.moodTrackerLayout);
-
         mDetector = new GestureDetector(this, new MyGestureListener());
-
-        myView.setOnTouchListener(touchListener);
-
-        mMood.setCurrentMood(SharedPref.read(SharedPref.CurrentMood, 1));
-        mMood.setComment(SharedPref.read(SharedPref.CurrentMoodComment, "null"));
-
+        mMood = new Mood();
 
         changeCurrentSmiley(SharedPref.read(SharedPref.CurrentMood, 1));
-
 
         mImgButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startAlert();
-                mMood.setCurrentMood(currentMood);
-                SharedPref.write(SharedPref.CurrentMood, mMood.getCurrentMood());
+                SharedPref.write(SharedPref.CurrentMood, currentMood);
 
-
-                mMood.setComment(SharedPref.read(SharedPref.CurrentMoodComment, "null"));
-
-                if (mMood.getComment().compareTo("null") == 0){
-                    mMood.setComment("null");
-                    SharedPref.write(SharedPref.CurrentMoodComment, mMood.getComment());
+                if (SharedPref.read(SharedPref.CurrentMoodComment, "null").compareTo("null") == 0){
+                    SharedPref.write(SharedPref.CurrentMoodComment, "null");
                 }
-
                 changeCurrentSmiley(SharedPref.read(SharedPref.CurrentMood, 1));
-
                 switch (currentMood){
                     case 0 :
                         supperHappySoundMP.start();
@@ -125,12 +100,10 @@ public class MainActivity extends AppCompatActivity{
                     case 4 :
                         sadSoundMP.start();
                         break;
-
                 }
                 SharedPref.write(SharedPref.NewMood, true);
             }
         });
-
         mAddNoteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -142,9 +115,7 @@ public class MainActivity extends AppCompatActivity{
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 mCommentInput = (EditText) ((AlertDialog) dialog).findViewById(R.id.boxComment);
-                                String comment = mCommentInput.getText().toString();
-                                mMood.setComment(comment);
-                                SharedPref.write(SharedPref.CurrentMoodComment, mMood.getComment());
+                                SharedPref.write(SharedPref.CurrentMoodComment, mCommentInput.getText().toString());
                             }
                         })
                         .setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
@@ -155,7 +126,6 @@ public class MainActivity extends AppCompatActivity{
                         .show();
             }
         });
-
         mHistoryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -172,7 +142,6 @@ public class MainActivity extends AppCompatActivity{
                 bundle.putInt("moodValue6", mListMoodValue.get(6));
                 bundle.putInt("moodValue7", mListMoodValue.get(7));
 
-
                 bundle.putString("moodComment1", mListMoodComment.get(1));
                 bundle.putString("moodComment2", mListMoodComment.get(2));
                 bundle.putString("moodComment3", mListMoodComment.get(3));
@@ -186,22 +155,18 @@ public class MainActivity extends AppCompatActivity{
             }
         });
     }
-
     View.OnTouchListener touchListener = new View.OnTouchListener() {
         @Override
         public boolean onTouch(View v, MotionEvent event) {
             return mDetector.onTouchEvent(event);
         }
     };
-
     class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
-
         @Override
         public boolean onDown(MotionEvent e) {
             Log.d("TAG","onDown: ");
             return true;
         }
-
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
             try {
@@ -261,7 +226,6 @@ public class MainActivity extends AppCompatActivity{
         viewAddNote.setBackgroundColor(color);
         viewHistory.setBackgroundColor(color);
     }
-
     private void changeCurrentSmiley(int currentMood){
         switch (currentMood){
             case 0 :
@@ -281,8 +245,10 @@ public class MainActivity extends AppCompatActivity{
                 break;
         }
     }
-
     private void saveMoodAtMidnight(){
+            mMood.setCurrentMood(SharedPref.read(SharedPref.CurrentMood, 1));
+            mMood.setComment(SharedPref.read(SharedPref.CurrentMoodComment, "null"));
+
             SharedPref.createListMood(mListMoodValue, mListMoodComment);
             mMood.addMoodValue(mListMoodValue);
             mMood.addMoodComment(mListMoodComment);
@@ -291,14 +257,12 @@ public class MainActivity extends AppCompatActivity{
             SharedPref.write(SharedPref.CurrentMoodComment, "null");
             SharedPref.write(SharedPref.CurrentMood, 1);
             SharedPref.write(SharedPref.NewMood, false);
+            SharedPref.write(SharedPref.Midnight, false);
+
             currentMood =1;
-            mMood.setCurrentMood(1);
             changeSlide(1);
             changeCurrentSmiley(1);
-
     }
-
-
     private void startAlert(){
         Date date = new Date();
         SimpleDateFormat HOUR = new SimpleDateFormat("HH");
@@ -308,17 +272,13 @@ public class MainActivity extends AppCompatActivity{
 
         int hour = Integer.parseInt(Hour);
         int min = Integer.parseInt(Min);
-
         int millisBeforeMidnight = ((23 - hour) * 3600000) + ((60 - min) * 60000);
-
-        System.out.println(millisBeforeMidnight);
 
         Intent alarmIntent = new Intent(MainActivity.this, AlarmReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 234324243, alarmIntent, 0);
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + (millisBeforeMidnight), pendingIntent);
     }
-
     @Override
     protected void onStart() {
         super.onStart();
@@ -326,35 +286,26 @@ public class MainActivity extends AppCompatActivity{
 
         if (SharedPref.read(SharedPref.Midnight, false) == true){
             if (SharedPref.read(SharedPref.NewMood, false) == true){saveMoodAtMidnight();}
-            SharedPref.write(SharedPref.Midnight, false);
         }
     }
-
     @Override
     protected void onResume() {
         super.onResume();
-
         System.out.println("MainActivity::onResume()");
     }
-
     @Override
     protected void onPause() {
         super.onPause();
-
         System.out.println("MainActivity::onPause()");
     }
-
     @Override
     protected void onStop() {
         super.onStop();
-
         System.out.println("MainActivity::onStop()");
     }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
         System.out.println("MainActivity::onDestroy()");
     }
 }

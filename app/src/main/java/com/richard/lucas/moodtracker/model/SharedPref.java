@@ -2,16 +2,9 @@ package com.richard.lucas.moodtracker.model;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Bundle;
-
-import com.richard.lucas.moodtracker.controller.HistoryActivity;
-import com.richard.lucas.moodtracker.controller.MainActivity;
 
 import java.util.Map;
-
-import static android.support.v4.content.ContextCompat.startActivity;
 
 /**
  * Created by lucas on 20/11/2018.
