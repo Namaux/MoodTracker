@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.richard.lucas.moodtracker.R;
+import com.richard.lucas.moodtracker.model.SharedPref;
 
 import java.util.HashMap;
 import java.util.Map;
