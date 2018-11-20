@@ -2,28 +2,33 @@ package com.richard.lucas.moodtracker.model;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
+
+import com.richard.lucas.moodtracker.controller.HistoryActivity;
+import com.richard.lucas.moodtracker.controller.MainActivity;
 
 import java.util.Map;
+
+import static android.support.v4.content.ContextCompat.startActivity;
 
 /**
  * Created by lucas on 20/11/2018.
  */
-public class SharedPref
-{
+public class SharedPref {
     private static SharedPreferences mSharedPref;
     public static final String CurrentMood = "currentMood";
     public static final String CurrentMoodComment = "currentMoodComment";
     public static final String NewMood = "newMood";
     public static final String Midnight = "midnight";
+    static Context applicationContext = MainActivity.getContextOfApplication();
 
-    private SharedPref()
-    {
 
+    private SharedPref() {
     }
 
-    public static void init(Context context)
-    {
+    public static void init(Context context) {
         if(mSharedPref == null)
             mSharedPref = context.getSharedPreferences(context.getPackageName(), Activity.MODE_PRIVATE);
     }
@@ -96,7 +101,7 @@ public class SharedPref
 
     /*public static void createBundle(Map<Integer, Integer> mListMoodValue, Map<Integer, String> mListMoodComment){
 
-        Intent recordActivity = new Intent(MainActivity.class, HistoryActivity.class);
+        Intent recordActivity = new Intent(applicationContext, HistoryActivity.class);
 
 
         Bundle bundle = new Bundle();

@@ -2,6 +2,7 @@ package com.richard.lucas.moodtracker.controller;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -20,6 +21,7 @@ import android.widget.ImageButton;
 import com.richard.lucas.moodtracker.R;
 import com.richard.lucas.moodtracker.model.AlarmReceiver;
 import com.richard.lucas.moodtracker.model.Mood;
+import com.richard.lucas.moodtracker.model.PlaySound;
 import com.richard.lucas.moodtracker.model.SharedPref;
 
 import java.text.SimpleDateFormat;
@@ -40,6 +42,7 @@ public class MainActivity extends AppCompatActivity{
     private ImageButton mHistoryButton;
     private EditText mCommentInput;
     private ImageView mImgCurrentMood;
+    public static Context contextOfApplication;
 
     private int currentMood = 1; // 0:superHappy 1:happy 2:normal 3:disappointed 4:sad
 
@@ -57,23 +60,17 @@ public class MainActivity extends AppCompatActivity{
         View myView = findViewById(R.id.moodTrackerLayout);
         myView.setOnTouchListener(touchListener);
 
-        final MediaPlayer supperHappySoundMP = MediaPlayer.create(this, R.raw.super_happy);
-        final MediaPlayer happySoundMP = MediaPlayer.create(this, R.raw.happy);
-        final MediaPlayer normalSoundMP = MediaPlayer.create(this, R.raw.normal);
-        final MediaPlayer disapointedSoundMP = MediaPlayer.create(this, R.raw.disappointed);
-        final MediaPlayer sadSoundMP = MediaPlayer.create(this, R.raw.sad);
-
         mImgButton = (ImageButton) findViewById(R.id.smiley);
         mAddNoteButton = (ImageButton) findViewById(R.id.addNote);
         mHistoryButton = (ImageButton) findViewById(R.id.history);
         mCommentInput = (EditText) findViewById(R.id.boxComment);
         mImgCurrentMood = (ImageView) findViewById(R.id.currentSmiley);
+        contextOfApplication = getApplicationContext();
 
         mDetector = new GestureDetector(this, new MyGestureListener());
         mMood = new Mood();
 
         changeCurrentSmiley(SharedPref.read(SharedPref.CurrentMood, 1));
-
         mImgButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -84,23 +81,7 @@ public class MainActivity extends AppCompatActivity{
                     SharedPref.write(SharedPref.CurrentMoodComment, "null");
                 }
                 changeCurrentSmiley(SharedPref.read(SharedPref.CurrentMood, 1));
-                switch (currentMood){
-                    case 0 :
-                        supperHappySoundMP.start();
-                        break;
-                    case 1 :
-                        happySoundMP.start();
-                        break;
-                    case 2 :
-                        normalSoundMP.start();
-                        break;
-                    case 3 :
-                        disapointedSoundMP.start();
-                        break;
-                    case 4 :
-                        sadSoundMP.start();
-                        break;
-                }
+                PlaySound.sound(currentMood);
                 SharedPref.write(SharedPref.NewMood, true);
             }
         });
@@ -278,6 +259,9 @@ public class MainActivity extends AppCompatActivity{
         PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 234324243, alarmIntent, 0);
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + (millisBeforeMidnight), pendingIntent);
+    }
+    public static Context getContextOfApplication(){
+        return contextOfApplication;
     }
     @Override
     protected void onStart() {
